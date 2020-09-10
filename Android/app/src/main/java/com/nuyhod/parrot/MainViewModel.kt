@@ -20,4 +20,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    public fun speakOut(context: Context, msgModel: MsgModel) {
+        Log.d("MAIN VIEWMODEL", "실행됨")
+        val text: String = filterPck(msgModel)
+        tts.setTTS(context)
+        tts.sayTTS(context, text)
+    }
+
 }
