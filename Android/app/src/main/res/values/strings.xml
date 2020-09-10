@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">앵무새</string>
+
+    <!-- Package Name -->
+    <string name="kakao_talk">com.kakao.talk</string>
+    <string name="instagram">com.instagram.android</string>
+    <string name="face_book">com.facebook.orca</string>
+    <string name="twitter">com.twitter.android</string>
+    <string name="message">com.samsung.android.messaging</string>
+</resources>
