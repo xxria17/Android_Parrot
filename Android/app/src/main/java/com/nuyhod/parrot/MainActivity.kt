@@ -33,7 +33,11 @@ class MainActivity : AppCompatActivity() {
             textView = findViewById(R.id.message_text)
         }
 
-
+        notification.mutableData.observe(this, Observer {
+            Log.d("MAIN!!!!", it.sender + it.text + it.pckName)
+            textView.text = "${it.sender} 님이 메세지를 보냈습니다. \n {${it.text}"
+            mainViewModel.speakOut(this, it)
+        })
     }
 
     private fun permissionGranted(): Boolean {
