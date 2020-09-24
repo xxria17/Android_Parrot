@@ -3,11 +3,14 @@ package com.nuyhod.parrot
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.nuyhod.parrot.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +18,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var tts: BaseTTS
+    private lateinit var stt: BaseSTT
     private lateinit var textView: TextView
+    private lateinit var sendBtn: View
+    private lateinit var msgModel: MsgModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +37,21 @@ class MainActivity : AppCompatActivity() {
             lifecycleOwner = this@MainActivity
             viewmodel = mainViewModel
             textView = findViewById(R.id.message_text)
+            sendBtn = findViewById(R.id.send_button)
         }
 
-        notification.mutableData.observe(this, Observer {
-            Log.d("MAIN!!!!", it.sender + it.text + it.pckName)
-            textView.text = "${it.sender} 님이 메세지를 보냈습니다. \n {${it.text}"
-            mainViewModel.speakOut(this, it)
-        })
+        if (intent.hasExtra("packageName")) {
+            val sender = intent.getStringExtra("sender")
+            val text = intent.getStringExtra("text")
+            val pckName = intent.getStringExtra("packageName")
+            textView.text = "${sender} 님이 메세지를 보냈습니다. \n {${text}"
+            mainViewModel.speakOut(this.applicationContext, pckName, sender, text)
+        }
+
+
+//        sendBtn.setOnClickListener {
+//            mainViewModel.listen(packageName, this)
+//        }
     }
 
     private fun permissionGranted(): Boolean {
@@ -45,8 +59,4 @@ class MainActivity : AppCompatActivity() {
         return sets != null && sets.contains(packageName)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        tts.endTTS()
-    }
 }
